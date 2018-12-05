@@ -2,46 +2,28 @@ const input = require('./day5.input');
 
 /** Part 1 **/
 
-let input1 = input;
-let memo = {};
-
-const replace = (x) => {
-  if (memo[x]) return memo[x];
-  let ans = '';
-  for (let i = 0; i < x.length; i++) {
-    if (x[i] === x[i+1] || !x[i+1]) {
-      ans += x[i];
-    } else {
-      i++;
+const polymerize = (input) => {
+  for (let i = 0; i < input.length; i++) {
+    if (input[i + 1] && input[i].toLowerCase() === input[i + 1].toLowerCase()) {
+      if (input[i] !== input[i + 1]) {
+        input = input.substring(0, i) + input.substring(i + 2);
+        i = i ? i - 2 : i - 1;
+      }
     }
   }
-  memo[x] = ans;
-  return ans;
+  return input.length;
 };
 
-let ans1 = input1.replace(/(.)\1+/gi, replace);
-while (input1 !== ans1) {
-  input1 = ans1;
-  ans1 = input1.replace(/(.)\1+/gi, replace);
-}
-
-console.log('Part 1: ', ans1.length);
+console.log('Part 1: ', polymerize(input));
 
 /** Part 2 **/
 
-// Forgive me.
 const a = 'abcdefghijklmnopqrstuvwxyz';
-
 let minLength = input.length;
 
 for (let i = 0; i < a.length; i++) {
-  let input2 = input.replace(new RegExp(`${a[i]}`, 'gi'), '');
-  let ans2 = input2.replace(/(.)\1+/gi, replace);
-  while (input2 !== ans2) {
-    input2 = ans2;
-    ans2 = input2.replace(/(.)\1+/gi, replace);
-  }
-  if (input2.length < minLength) minLength = input2.length;
+  let len = polymerize(input.replace(new RegExp(`${a[i]}`, 'gi'), ''));
+  if (len < minLength) minLength = len;
 }
 
 console.log('Part 2: ', minLength);
