@@ -13,6 +13,8 @@
  *
  */
 
+const JSBI = require('jsbi.mjs');
+
 class Node {
 
   constructor(value, opts = {}) {
@@ -33,13 +35,26 @@ class LinkedList {
     } else {
       this.length = 0;
     }
+    this.tempHash = {};
   }
 
   getNodeAt(idx) {
     let node = this.head;
     let i = 0;
+    for (let key in this.tempHash) {
+      if (idx >= +key) {
+        i = +key;
+        node = this.tempHash[key];
+      } else {
+        break;
+      }
+    }
+
     for (; i < idx; i++) {
       if (!node) return;
+      if (i && i % 25000 === 0) {
+        this.tempHash[i] = node;
+      }
       node = node.next;
     }
     return node;
@@ -223,6 +238,13 @@ class LinkedList {
     node.next = newNode;
     newNode.next = temp;
     this.length++;
+
+    for (let key in this.tempHash) {
+      if (+key >= idx) {
+        // this.tempHash[+key+1] = this.tempHash[key];
+        delete this.tempHash[key];
+      }
+    }
   }
 
   /**
@@ -292,6 +314,13 @@ class LinkedList {
   }
 
   removeAt(idx) {
+    for (let key in this.tempHash) {
+      if (idx > +key) {
+        this.tempHash[+key-1] = this.tempHash[key];
+        delete this.tempHash[key];
+      }
+    }
+    this.tempHash = {};
     if (idx === 0) {
       if (this.head && this.head.value) {
         const temp = this.head.value;
@@ -378,6 +407,10 @@ class LinkedList {
    * @param value
    */
   unshift(value) {
+    for (let key in this.tempHash) {
+      this.tempHash[+key+1] = this.tempHash[key];
+      delete this.tempHash[key];
+    }
     const node = new Node(value);
     if (this.isEmpty()) {
       this.head = node;
