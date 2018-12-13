@@ -13,8 +13,6 @@
  *
  */
 
-const JSBI = require('jsbi.mjs');
-
 class Node {
 
   constructor(value, opts = {}) {
@@ -241,7 +239,7 @@ class LinkedList {
 
     for (let key in this.tempHash) {
       if (+key >= idx) {
-        // this.tempHash[+key+1] = this.tempHash[key];
+        this.tempHash[+key+1] = this.tempHash[key];
         delete this.tempHash[key];
       }
     }
