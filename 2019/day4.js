@@ -1,8 +1,12 @@
-const input = require('./day4.input.js').split('\n');
+const start = 183565;
+const end = 657474;
 
-/** Part 1 **/
-let ans;
-console.log('Part 1: ', ans);
+function getAns(part1, ans = 0, i = start, j = i + "") {
+  for (let i = start, j = i + ''; i <= end; i++, j = i + "")
+    ans += +!!((j.split('').sort().join('') === j) &&
+      ((part1 && j.match(/(\d)\1/g)) || (!part1 && j.match(/(\d)\1(?<!\1\1\1)(?!\1)/g))));
+  return ans;
+}
 
-/** Part 2 **/
-console.log('Part 2: ', ans);
+console.log('Part 1: ', getAns(true));
+console.log('Part 2: ', getAns(false));
