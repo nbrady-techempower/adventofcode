@@ -4,7 +4,7 @@ const end = 657474;
 function getAns(part1, ans = 0) {
   for (let i = start, j = i + ''; i <= end; i++, j = i + "")
     ans += +!!((j.split('').sort().join('') === j) &&
-      ((part1 && j.match(/(\d)\1/g)) || (!part1 && j.match(/(\d)\1(?<!\1\1\1)(?!\1)/g))));
+      ((part1 && j.match(/(\d)\1/g)) || (!part1 && j.match(/(\d)\1(?<!\1{3})(?!\1)/g))));
   return ans;
 }
 
